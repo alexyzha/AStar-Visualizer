@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A* Algorithm Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="topControls">
+        <div id="title">
+            <button>
+                <a href="https://github.com/alexyzha/AStar-Visualizer" class="btn2"><span class="spn2">A* Algorithm Visualization</span></a>
+            </button>
+        </div>
+        <div id="sliders">
+            <label for="xValue">Columns: <span id="xSize">10</span></label>
+            <input type="range" id="xValue" min="2" max="50" value="10">
+            <label for="yValue">Rows: <span id="ySize">10</span></label>
+            <input type="range" id="yValue" min="2" max="50" value="10">
+        </div>
+        <div class="mydict" id="options">
+            <div>
+                <label>
+                    <input type="radio" name="radio" value="begin" checked="">
+                    <span>Begin</span>
+                </label>
+                <label>
+                    <input type="radio" name="radio" value="end">
+                    <span>End</span>
+                </label>
+                <label>
+                    <input type="radio" name="radio" value="obstacle">
+                    <span>Obstacle</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div id="mapContainer">
+        <div id="map"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

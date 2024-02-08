@@ -1,0 +1,205 @@
+/* style.css */
+@font-face {
+    font-family: 'Hack';
+    src: url('fonts/Hack-Regular.ttf') format('truetype');
+}
+
+body, html {
+    font-family: 'Hack', sans-serif;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#topControls {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* no need */
+#title {
+    font-size: 24px;
+    margin: 20px 0;
+}
+
+/* style.css */
+#mapContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#map {
+    margin: auto;
+}
+
+.row {
+    display: flex;
+}
+
+.cell {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #000;
+    box-sizing: border-box;
+}
+
+#map .begin { background-color: green; }
+#map .end { background-color: red; }
+#map .obstacle { background-color: black; }
+
+/* choice button */
+:focus {
+    outline: 0;
+    border-color: #878787;
+    box-shadow: 0 0 0 4px #bdbdbd;
+}
+
+.mydict div {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    justify-content: center;
+}
+
+.mydict input[type="radio"] {
+    clip: rect(0 0 0 0);
+    clip-path: inset(100%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+.mydict input[type="radio"]:checked + span {
+    box-shadow: 0 0 0 0.0625em #8e8e8e;
+    background-color: #f1f1f1;
+    z-index: 1;
+    color: #646464;
+}
+
+label span {
+    display: block;
+    cursor: pointer;
+    background-color: #fff;
+    padding: 0.375em .75em;
+    position: relative;
+    margin-left: .0625em;
+    box-shadow: 0 0 0 0.0625em #d1d1d1;
+    letter-spacing: .05em;
+    color: #646464;
+    text-align: center;
+    transition: background-color .5s ease;
+}
+  
+label:first-child span {
+    border-radius: .375em 0 0 .375em;
+}
+  
+label:last-child span {
+    border-radius: 0 .375em .375em 0;
+}
+  
+#sliders {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    gap: 20px; 
+    margin-bottom: 20px;
+    color: #646464;
+}
+
+#sliders label {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+}
+
+#sliders input[type="range"] {
+    margin: 0 1px; 
+}
+
+#sliders span {
+    background-color: transparent;
+    border: none;
+    padding: 0; 
+    margin-left: 1px;
+}
+
+#sliders label span {
+    background: none;
+    border: none;
+    padding: 0; 
+    box-shadow: none;
+    margin: 0 1px; 
+    font-weight: normal;
+}
+
+/*    */
+.btn2 {
+    font-family: 'Hack', sans-serif;
+    position: relative;
+    display: inline-block;
+    padding: 15px 30px;
+    border: 2px solid #646464;
+    text-transform: uppercase;
+    color: #646464;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 24px;
+    transition: 0.3s;
+}
+
+.btn2::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: calc(100% + 4px);
+    height: calc(100% - -2px);
+    background-color: #ffffff;
+    transition: 0.3s ease-out;
+    transform: scaleY(1);
+}
+
+.btn2::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: calc(100% + 4px);
+    height: calc(100% - 50px);
+    background-color: #ffffff;
+    transition: 0.3s ease-out;
+    transform: scaleY(1);
+}
+
+.btn2:hover::before {
+    transform: translateY(-25px);
+    height: 0;
+}
+
+.btn2:hover::after {
+    transform: scaleX(0);
+    transition-delay: 0.15s;
+}
+
+.btn2:hover {
+    border: 2px solid #646464;
+}
+
+.btn2 span {
+    position: relative;
+    z-index: 3;
+}
+
+button {
+    text-decoration: none;
+    border: none;
+    background-color: transparent;
+}
