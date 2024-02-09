@@ -1,7 +1,7 @@
 /* style.css */
 @font-face {
     font-family: 'Hack';
-    src: url('fonts/Hack-Regular.ttf') format('truetype');
+    src: url('font/Hack-Regular.ttf') format('truetype');
 }
 
 body, html {
@@ -202,4 +202,55 @@ button {
     text-decoration: none;
     border: none;
     background-color: transparent;
+}
+
+/****/
+
+.btn3 {
+  font-family: 'Hack', sans-serif;
+  align-items: center;
+  background-color: #FFFFFF;
+  border: 1px solid #878787;
+  border-radius: .25rem;
+  box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+  box-sizing: border-box;
+  color: #646464;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  justify-content: center;
+  line-height: 1.25;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  min-height: 3rem;
+  padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+  position: relative;
+  text-decoration: none;
+  transition: all 250ms;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: baseline;
+  width: auto;
+}
+
+.btn3:hover,
+.btn3:focus {
+  border-color: #878787;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  color: #646464;
+}
+
+.btn3:hover {
+  transform: translateY(-1px);
+}
+
+.btn3:active {
+  background-color: #F0F0F1;
+  border-color: #878787;
+  box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+  color: #646464;
+  transform: translateY(0);
 }

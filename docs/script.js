@@ -3,9 +3,50 @@ let currentOption = 'begin'; // begin default
 let startSelected = false;
 let endSelected = false;
 let startX, startY, endX, endY; // coord start end xy
+let myModule; // Use this to store the initialized module
 
 document.addEventListener('DOMContentLoaded', () => {
+  createModule().then(function(my_module) { // Adjust 'createModule' based on your EXPORT_NAME
+    myModule = my_module; // Store the initialized module for later use
+    wasmReady = true;
+  });
+
   document.querySelector('input[type="radio"][value="begin"]').checked = true;
+
+  document.getElementById('runAlgo').addEventListener('click', () => {
+    console.log('Run button clicked');
+    if (!wasmReady) {
+      console.log('WASM module not ready');
+      return;
+    }
+    if (!startSelected || !endSelected) {
+      console.log('start or end point not set.');
+      return;
+    }
+    const COL = parseInt(document.getElementById('xValue').value);
+    const ROW = parseInt(document.getElementById('yValue').value);
+    let obstacleCoords = [];
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => {
+      if (cell.classList.contains('obstacle')) {
+        obstacleCoords.push(parseInt(cell.dataset.x), parseInt(cell.dataset.y));
+      }
+    });
+
+    // Prepare the obstacle coordinates for WASM
+    // Note: This assumes your C++ function can handle a flat array for obstacles
+    let obstaclesPtr = myModule._malloc(obstacleCoords.length * Int32Array.BYTES_PER_ELEMENT);
+    myModule.HEAP32.set(new Int32Array(obstacleCoords), obstaclesPtr / Int32Array.BYTES_PER_ELEMENT);
+
+    console.log('Start:', startX, startY);
+    console.log('End:', endX, endY);
+    console.log('Obstacles:', obstacleCoords);
+    // Assuming 'Run' is the correct function name and it's properly exported
+    myModule.AStar(COL, ROW, startX, startY, endX, endY, obstaclesPtr);
+
+    // Free the allocated memory for obstacles (if necessary)
+    myModule._free(obstaclesPtr);
+  });
 });
 
 document.querySelectorAll('.mydict input[type="radio"]').forEach(input => {

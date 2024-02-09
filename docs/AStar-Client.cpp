@@ -2,10 +2,13 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
+#include <emscripten/bind.h>
 using namespace std;
 
 // to compile and run B/C lambda function: g++ -std=c++11 AStar.cpp -o AStar && ./AStar
+// emcc AStar-Client.cpp -o JStar.js --bind -s MODULARIZE=1 -s EXPORT_NAME='createModule' -O2 -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_FUNCTIONS="['_free', '_malloc']" -lembind
 
+EMSCRIPTEN_KEEPALIVE
 const vector<pair<int,int>> DIRECTIONS{{0,-1},{0,1},{-1,0},{1,0},{-1,-1},{1,-1},{-1,1},{1,1}};
 
 struct Node {
@@ -16,14 +19,17 @@ struct Node {
     Node(double f, int x, int y, double g) : F(f), X(x), Y(y), G(g) {}
 };
 
+EMSCRIPTEN_KEEPALIVE
 double EuDist(int x1, int y1, int x2, int y2) {
     return sqrt(pow((x2-x1),2) + pow((y2-y1),2));
 }
 
+EMSCRIPTEN_KEEPALIVE
 double FixDist(int x1, int y1, int x2, int y2) {
     return abs(x1-x2) + abs(y1-y2) == 1.0 ? 1.0 : sqrt(2);
 }
 
+EMSCRIPTEN_KEEPALIVE
 vector<vector<double>> HMap(int col, int row, int tx, int ty) {
     vector<vector<double>> r(row,vector<double>(col,0.0));
     for(int i = 0; i < row; i++) {
@@ -34,6 +40,7 @@ vector<vector<double>> HMap(int col, int row, int tx, int ty) {
     return r;
 }
 
+EMSCRIPTEN_KEEPALIVE
 vector<pair<int,int>> N_FXN(const vector<vector<int>>& map, const vector<vector<bool>>& CLOSED, int x, int y) {
     vector<pair<int,int>> r;
     for (auto& d : DIRECTIONS) {
@@ -44,49 +51,37 @@ vector<pair<int,int>> N_FXN(const vector<vector<int>>& map, const vector<vector<
     return r;
 }
 
-void Visualize(vector<vector<pair<int,int>>>& RELATION, int tx, int ty, const vector<vector<int>>& map) {
-    vector<vector<string>> r(RELATION.size(),vector<string>(RELATION[0].size(),"0"));
+EMSCRIPTEN_KEEPALIVE
+vector<int> ReturnPath(vector<vector<pair<int,int>>>& RELATION, int tx, int ty, const vector<vector<int>>& map) {
+    vector<int> r;
     pair<int,int> C_PAIR = pair<int,int>(tx,ty);
     pair<int,int> I_PAIR = pair<int,int>(-1,-1);
+    r.push_back(C_PAIR.first);
+    r.push_back(C_PAIR.second);
     while(C_PAIR != I_PAIR) {
-        r[C_PAIR.second][C_PAIR.first] = "\x1b[92m0\x1b[0m";
         C_PAIR = RELATION[C_PAIR.second][C_PAIR.first];
+        r.push_back(C_PAIR.first);
+        r.push_back(C_PAIR.second);
     }
-    for(int i = 0; i < RELATION.size(); i++) {
-        for(int j = 0; j < RELATION[0].size(); j++) {
-            if(map[i][j] == 1) cout << "\x1b[91m1\x1b[0m ";
-            else cout << r[i][j] << " ";
-        }
-        cout << endl;
-    }
+    return r;
 }
 
-int main() {
-    const vector<vector<int>> TEST_MAP{{0,0,0,0,1,0,0,0,0,0},
-                                       {0,0,0,0,0,1,0,0,0,0},
-                                       {0,0,0,0,0,1,0,0,0,0},
-                                       {1,1,0,0,0,1,0,0,0,0},
-                                       {1,1,1,0,1,1,1,0,0,0},
-                                       {0,1,0,1,1,0,1,1,0,0},
-                                       {0,1,1,1,0,0,0,1,1,0},
-                                       {0,0,0,0,1,0,0,0,1,0},
-                                       {0,0,0,1,1,1,0,0,1,0},
-                                       {0,0,0,1,0,0,0,0,0,0}};
+EMSCRIPTEN_KEEPALIVE
+vector<int> AStar(int COL, int ROW, int sx, int sy, int tx, int ty, vector<int> B_COORD) {
+    vector<vector<int>> M_MAP(ROW,vector<int>(COL,0));
+    for(int x=0,y=1; y < B_COORD.size(); x+=2,y+=2) {
+        M_MAP[B_COORD[x]][B_COORD[y]] = 1;
+    }
 
-    int sx, sy;
-    cin >> sx >> sy;
-    int tx, ty;
-    cin >> tx >> ty;
-
-    const vector<vector<double>> H_MAP = HMap(TEST_MAP[0].size(),TEST_MAP.size(),tx,ty);
-    vector<vector<bool>> CLOSED(TEST_MAP.size() ,vector<bool>(TEST_MAP[0].size(),0));
-    for(int i = 0; i < TEST_MAP.size(); i++) {
-        for(int j = 0; j < TEST_MAP[0].size(); j++) {
-            if(TEST_MAP[i][j] == 1) CLOSED[i][j] = 1;
+    const vector<vector<double>> H_MAP = HMap(M_MAP[0].size(),M_MAP.size(),tx,ty);
+    vector<vector<bool>> CLOSED(M_MAP.size() ,vector<bool>(M_MAP[0].size(),0));
+    for(int i = 0; i < M_MAP.size(); i++) {
+        for(int j = 0; j < M_MAP[0].size(); j++) {
+            if(M_MAP[i][j] == 1) CLOSED[i][j] = 1;
         }
     }
-    vector<vector<pair<int,int>>> RELATION(TEST_MAP.size(),vector<pair<int,int>>(TEST_MAP[0].size(),pair<int,int>(-1,-1)));
-    vector<vector<double>> BEST_G(TEST_MAP.size(), vector<double>(TEST_MAP[0].size(), numeric_limits<double>::infinity()));
+    vector<vector<pair<int,int>>> RELATION(M_MAP.size(),vector<pair<int,int>>(M_MAP[0].size(),pair<int,int>(-1,-1)));
+    vector<vector<double>> BEST_G(M_MAP.size(), vector<double>(M_MAP[0].size(), numeric_limits<double>::infinity()));
     BEST_G[sy][sx] = 0.0;
 
     auto comp = [](const Node a, const Node b) { return a.F > b.F; };
@@ -100,7 +95,7 @@ int main() {
         int topx = OPEN.top().X, topy = OPEN.top().Y;
         int C_G = OPEN.top().G;
         OPEN.pop();
-        vector<pair<int,int>> neighbors = N_FXN(TEST_MAP,CLOSED,topx,topy);
+        vector<pair<int,int>> neighbors = N_FXN(M_MAP,CLOSED,topx,topy);
         for(auto& n : neighbors) {
             int tempx = n.first, tempy = n.second;
             double N_G = C_G + FixDist(topx,topy,tempx,tempy);
@@ -113,6 +108,10 @@ int main() {
         }
         CLOSED[topy][topx] = 1;
     }
-    Visualize(RELATION,tx,ty,TEST_MAP);
-    return 0;
+    return ReturnPath(RELATION,tx,ty,M_MAP);
+}
+
+EMSCRIPTEN_BINDINGS(my_module) {
+    emscripten::function("AStar", &AStar);
+    emscripten::register_vector<int>("VectorInt");
 }
