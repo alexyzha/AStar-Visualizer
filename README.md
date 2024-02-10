@@ -35,16 +35,14 @@ Let's start by outlining the setup:
 1. This specific example uses a matrix as a map
 2. Each node on the map is a matrix tile with coordinates (x,y)
 3. We'll allow for 8-directional movement:
-<div style="margin-left: 20px;">
-    - up
-    - down
-    - left
-    - right
-    - up-left
-    - up-right
-    - down-left
-    - down-right
-</div>
+    > - up
+    > - down
+    > - left
+    > - right
+    > - up-left
+    > - up-right
+    > - down-left
+    > - down-right
 5. We also need a priority queue for shortest path search
 
 So we begin with these C++ standard libraries:
