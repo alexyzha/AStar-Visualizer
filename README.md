@@ -304,7 +304,8 @@ vector<int> ReturnPath(vector<vector<pair<int,int>>>& RELATION, int tx, int ty, 
     return r;
 }
 ```
-3. Before compiling with EMCC on my own computer, I tried using WebAssembly Studio. That was a mistake, don't do that.
+3. Before compiling with EMCC on my own computer, I tried using WebAssembly Studio. That was a mistake, don't do that...
+4. I spent more time linking backend and creating frontend than I did actually CREATING the backend algorithm :(
 
 ## Credits:
 
