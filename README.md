@@ -6,11 +6,11 @@ This demo uses a 2-dimensional graph (matrix). The backend is coded in C++, whic
 
 This README page contains:
 1. A\* algorithm background
-2. Code documentation
+2. [Code documentation](#code documentation)
 3. A list of my struggles with WASM and how I overcame those 😭
 4. Credits to open source visual assets
 
-# A\* Algorithm Background:
+## A\* Algorithm Background:
 
 You should probably know:
 1. [Dijkstra's Algorithm](https://www.youtube.com/watch?v=_lHSawdgXpI)
@@ -28,11 +28,13 @@ By combining aspects from Dijkstra's algorithm and greedy algorithms, A\* always
 **[IMPORTANT:](https://ih1.redbubble.net/image.3842072201.6397/raf,360x360,075,t,fafafa:ca443f4786.jpg)** Something of note are that A\* uses something called an **F-score**, which is the total estimated cost. the F-score is derived from the **G-score** (the cost from the starting node) and the **H-score** (the heuristic estimated cost to reach the end node). A\* uses these scores to determine which nodes to check next, as well as which nodes to add to the optimal path. Essentially, for all nodes:
 - **F(n) = G(n) + H(n)**, where n is a node.
 
-# Code Documentation:
+## Code Documentation:
 
 I will not show the frontend part of this demo, as the algorithm itself matters more. (Also because the frontend doesn't do any computations 💀💀💀)
 
 The file containing all the logic is located in [main/AStar.cpp](https://github.com/alexyzha/AStar-Visualizer/blob/main/AStar.cpp).
+
+**Initial Setup:**
 
 Let's start by outlining the setup:
 1. This specific example uses a matrix as a map
@@ -94,7 +96,9 @@ const vector<vector<int>> TEST_MAP{{0,0,0,0,1,0,0,0,0,0},
 
 With all that out of the way, we can finally move on to the actual algorithm part of A\*. 
 
-We'll create a "Node" struct because every node contains more information than can be stored in a matrix of doubles. T
+**The Algorithm Part: 😳**
+
+We'll create a "Node" struct because every node contains more information than can be stored in a matrix of doubles. Although we have the H-scores (if you have no idea what I'm talking for all the nodes 
 
 
 
