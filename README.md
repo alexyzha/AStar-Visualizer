@@ -7,8 +7,8 @@ This demo uses a 2-dimensional graph (matrix). The backend is coded in C++, whic
 **Table of Contents:**
 1. [A\* Algorithm Background](#a-algorithm-background)
 2. [Code Documentation](#code-documentation)
-3. A list of my struggles with WASM and how I overcame those 😭
-4. Credits to open source visual assets
+3. [A list of my struggles with WASM and how I overcame those 😭](#wasm-emcc-pain-tears-mad-balding-malding)
+4. [Credits to open source visual assets](#credits)
 
 ## A\* Algorithm Background:
 
@@ -262,3 +262,53 @@ while(OPEN.size()) {
 That's it. That's A\*. It truly is one of the stars.
 
 ⭐⭐⭐⭐⭐
+
+## WASM, EMCC, PAIN, TEARS, MAD, BALDING, MALDING
+
+1. I couldn't get the module to expose C++ to JS to get exported for the longest time. The solution I reached is below:
+```cpp
+//compile line: emcc AStar-Client.cpp -o JStar.js --bind -s MODULARIZE=1 -s EXPORT_NAME='createModule' -O2 -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_FUNCTIONS="['_free', '_malloc']" -lembind
+//code:
+EMSCRIPTEN_BINDINGS(my_module) {
+    emscripten::function("AStar", &AStar);
+    emscripten::register_vector<int>("VectorInt");
+}
+```
+2. The function I used to return flattene d vector<int> to JS had an error. So after HOURS of trying to set up a godforsaken webpage, I ran into an error with the pathing algorithm and ended up checking everything again. In [main/docs/AStar-Client.cpp](https://github.com/alexyzha/AStar-Visualizer/blob/main/docs/AStar-Client.cpp) there was an error within the ReturnPath function (lines 54-64). I'm not even going to lie, I have no clue how this error messed up the optimal path so much, but everything works now so I'm just going to pretend I didn't smack my head into a brick wall for hours because I threw a little bit on one tiny little function. The before and after is below, see if you can spot a difference... 😭
+```cpp
+//before:
+vector<int> ReturnPath(vector<vector<pair<int,int>>>& RELATION, int tx, int ty, const vector<vector<int>>& map) {
+    vector<int> r;
+    pair<int,int> C_PAIR = pair<int,int>(tx,ty);
+    pair<int,int> I_PAIR = pair<int,int>(-1,-1);
+    r.push_back(C_PAIR.first);
+    r.push_back(C_PAIR.second);
+    while(C_PAIR != I_PAIR) {
+        C_PAIR = RELATION[C_PAIR.second][C_PAIR.first];
+        r.push_back(C_PAIR.first);
+        r.push_back(C_PAIR.second);
+    }
+    return r;
+}
+
+//after:
+vector<int> ReturnPath(vector<vector<pair<int,int>>>& RELATION, int tx, int ty, const vector<vector<int>>& map) {
+    vector<int> r;
+    pair<int,int> C_PAIR = pair<int,int>(tx,ty);
+    pair<int,int> I_PAIR = pair<int,int>(-1,-1);
+    while(C_PAIR != I_PAIR) {
+        r.push_back(C_PAIR.first);
+        r.push_back(C_PAIR.second);
+        C_PAIR = RELATION[C_PAIR.second][C_PAIR.first];
+    }
+    return r;
+}
+```
+3. Before compiling with EMCC on my own computer, I tried using WebAssembly Studio. That was a mistake, don't do that.
+
+## Credits:
+
+This is the [font](https://sourcefoundry.org/hack/) I used on the webpage. I love it :)
+
+[Here](https://uiverse.io) is where I got the code bases for the buttons on the webpage. I changed some of the colors and animations, but the general shape/reactions are all derived from other CSS UI elements.
+
