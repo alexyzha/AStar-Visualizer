@@ -70,7 +70,7 @@ vector<int> AStar(int COL, int ROW, int sx, int sy, int tx, int ty, vector<int> 
     }
 
     const vector<vector<double>> H_MAP = HMap(M_MAP[0].size(),M_MAP.size(),tx,ty);
-    vector<vector<bool>> CLOSED(M_MAP.size() ,vector<bool>(M_MAP[0].size(),0));
+    vector<vector<bool>> CLOSED(M_MAP.size(), vector<bool>(M_MAP[0].size(),0));
     for(int i = 0; i < M_MAP.size(); i++) {
         for(int j = 0; j < M_MAP[0].size(); j++) {
             if(M_MAP[i][j] == 1) CLOSED[i][j] = 1;
