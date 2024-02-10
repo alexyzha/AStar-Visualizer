@@ -25,7 +25,8 @@ A\* differs from Dijkstra's algorithm because it uses [heuristics](https://en.wi
 
 By combining aspects from Dijkstra's algorithm and greedy algorithms, A\* always accurately finds the shortest path possible.
 
-**IMPORTANT**
+**IMPORTANT:**
+
 Something of note are that A\* uses something called an F-score, which is the total estimated cost. the F-score is derived from the G-score (the cost from the starting node) and the H-score (the heuristic estimated cost to reach the end node). A\* uses these scores to determine which nodes to check next, as well as which nodes to add to the optimal path.
 - F(n) = G(n) + H(n), where n is a node.
 
