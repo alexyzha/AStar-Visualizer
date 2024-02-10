@@ -257,25 +257,8 @@ while(OPEN.size()) {
     CLOSED[topy][topx] = 1;
 }
 ```
+4. If no valid paths are found, the open set will eventually become empty. The while loop's condition will be satisfied, and the loop will end. If we try to trace back from the RELATIONS map using the end node, we will just get the pair -1,-1, which is the default value of every pair in the RELATIONS map.
 
+That's it. That's A\*. It truly is one of the stars.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+⭐⭐⭐⭐⭐
