@@ -28,9 +28,9 @@ By combining aspects from Dijkstra's algorithm and greedy algorithms, A\* always
 **[IMPORTANT — HOW A\* WORKS:](https://ih1.redbubble.net/image.3842072201.6397/raf,360x360,075,t,fafafa:ca443f4786.jpg)** Some things of note are that A\* uses something called an **F-score**, which is the total estimated cost. the F-score is derived from the **G-score** (the cost from the starting node) and the **H-score** (the heuristic estimated cost to reach the end node). A\* uses these scores to determine which nodes to check next, as well as which nodes to add to the optimal path. Essentially, for all nodes:
 - **F(n) = G(n) + H(n)**, where n is a node.
 
-**A\* also uses open/closed sets**. The open set represents all the current nodes within reach that haven't been explored yet (this is the priority queue). The closed set represents all the nodes that cannot be reached because they are 1. blocked, or 2. already processed.
-- Throughout it's time in the priority queue, a node may or may not be processed
-- If a node reaches the front of the priority queue, it is processed
+**A\* also uses open/closed sets**. The open set represents all the current nodes within reach that haven't been explored yet (this will be represented by a priority queue). The closed set represents all the nodes that cannot be reached because they are 1. blocked, or 2. already processed.
+- Throughout it's time in the open set, a node may or may not be processed
+- If a node reaches the front of the priority queue (open set), it is processed
 - Processing a node means adding all of its neighboring nodes to the priority queue with their own respective F- and G-scores
 - If a neighbor is blocked or in the closed set, it will not be added
 
@@ -38,11 +38,11 @@ Here are some visual examples. Let's work with a 3x3 excerpt from a matrix of ar
 
 <img width="151" alt="Screenshot_2024-02-09_at_7 00 03_PM" src="https://github.com/alexyzha/AStar-Visualizer/assets/122637724/6aa4d88b-90e3-4372-85cb-9e0e19c4c419">
 
-The green node (5) will be our starting node. Nodes 1, 2, 3, 4, 6, 7, 8, and 9 are its neighbors, so they would all get put into a priority queue. The starting node has been processed! We must now close the starting node, because we don't want to backtrack to a node we've already processed.
+Since this is the very beginning of the algorithm, we initialize our open set (a priority queue) and place the starting node (the green node at position 5) in it. Nodes 1, 2, 3, 4, 6, 7, 8, and 9 are its neighbors, so they would all get put into a priority queue too. After all of the starting node's neighbors are inserted into the priority queue, we put the starting node in the closed set, because we don't want to backtrack to a node we've already processed. Now, the starting node has been processed!
 
 <img width="148" alt="Screenshot_2024-02-09_at_6 56 13_PM" src="https://github.com/alexyzha/AStar-Visualizer/assets/122637724/3dac5968-414c-40c5-9193-4eb4bf6fdd2f">
 
-Say for some reason nodes 2, 3, and 6 have the smallest F-scores. We'll process them, and then close them just like we did with the starting node. We'll now end up with a configuration that looks like this:
+Moving on, say for some reason nodes 2, 3, and 6 have the smallest F-scores. This means that they will all appear at the front of the open set (priority queue). We'll process them, and then close them just like we did with the starting node. We'll now end up with a configuration that looks like this:
 
 <img width="151" alt="Screenshot_2024-02-09_at_6 57 28_PM" src="https://github.com/alexyzha/AStar-Visualizer/assets/122637724/092640de-3720-46fa-9f84-671428de21b5">
 
