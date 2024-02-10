@@ -33,12 +33,15 @@ By combining aspects from Dijkstra's algorithm and greedy algorithms, A\* always
 - Processing a node means adding all of its neighbors to the priority queue with their own respective F- and G-scores
 
 Here are some visual examples. Let's work with a 3x3 excerpt from a matrix of arbitrary size. Each square (white/green, labeled 1-9) represents a node.
+
 <img width="151" alt="Screenshot_2024-02-09_at_7 00 03_PM" src="https://github.com/alexyzha/AStar-Visualizer/assets/122637724/6aa4d88b-90e3-4372-85cb-9e0e19c4c419">
 
 The green node (5) will be our starting node. Nodes 1, 2, 3, 4, 6, 7, 8, and 9 are its neighbors, so they would all get put into a priority queue. The starting node has been processed! We must now close the starting node, because we don't want to backtrack to a node we've already processed.
+
 <img width="148" alt="Screenshot_2024-02-09_at_6 56 13_PM" src="https://github.com/alexyzha/AStar-Visualizer/assets/122637724/3dac5968-414c-40c5-9193-4eb4bf6fdd2f">
 
 Say for some reason nodes 2, 3, and 6 have the smallest F-scores. We'll process them, and then close them just like we did with the starting node. We'll now end up with a configuration that looks like this:
+
 <img width="151" alt="Screenshot_2024-02-09_at_6 57 28_PM" src="https://github.com/alexyzha/AStar-Visualizer/assets/122637724/092640de-3720-46fa-9f84-671428de21b5">
 
 We will stop processing nodes when we reach the end node.
