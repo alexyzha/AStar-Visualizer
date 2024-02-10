@@ -98,7 +98,7 @@ With all that out of the way, we can finally move on to the actual algorithm par
 
 **The Algorithm Part: 😳**
 
-We'll create a "Node" struct because every node contains more information than can be stored in a matrix of doubles. Although we have the H-scores (if you have no idea what I'm talking about, [click here:](#a-algorithm-background)) for all the nodes 
+We'll create a "Node" struct because every node contains more information than can be stored in a matrix of doubles. Although we have the H-scores ([Read: "IMPORTANT:..."](#a-algorithm-background)) for all the nodes 
 
 
 
