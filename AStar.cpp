@@ -86,7 +86,7 @@ int main() {
     cin >> tx >> ty;
 
     const vector<vector<double>> H_MAP = HMap(TEST_MAP[0].size(),TEST_MAP.size(),tx,ty);
-    vector<vector<bool>> CLOSED(TEST_MAP.size() ,vector<bool>(TEST_MAP[0].size(),0));
+    vector<vector<bool>> CLOSED(TEST_MAP.size(), vector<bool>(TEST_MAP[0].size(),0));
     for(int i = 0; i < TEST_MAP.size(); i++) {
         for(int j = 0; j < TEST_MAP[0].size(); j++) {
             if(TEST_MAP[i][j] == 1) CLOSED[i][j] = 1;
