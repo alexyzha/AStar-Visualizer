@@ -5,7 +5,7 @@ A\* is an informed search algorithm used to find the shortest possible path betw
 This demo uses a 2-dimensional graph (matrix). The backend is coded in C++, which is then exposed to JavaScript using [Emscripten](https://emscripten.org).
 
 This README page contains:
-1. A\* algorithm background
+1. [A\* algorithm background](#a-algorithm-background)
 2. [Code documentation](#code-documentation)
 3. A list of my struggles with WASM and how I overcame those 😭
 4. Credits to open source visual assets
@@ -98,7 +98,7 @@ With all that out of the way, we can finally move on to the actual algorithm par
 
 **The Algorithm Part: 😳**
 
-We'll create a "Node" struct because every node contains more information than can be stored in a matrix of doubles. Although we have the H-scores (if you have no idea what I'm talking for all the nodes 
+We'll create a "Node" struct because every node contains more information than can be stored in a matrix of doubles. Although we have the H-scores (if you have no idea what I'm talking about, [click here:](#a-algorithm-background)) for all the nodes 
 
 
 
