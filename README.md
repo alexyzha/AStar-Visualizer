@@ -31,7 +31,8 @@ By combining aspects from Dijkstra's algorithm and greedy algorithms, A\* always
 **A\* also uses open/closed sets**. The open set represents all the current nodes within reach that haven't been explored yet (this is the priority queue). The closed set represents all the nodes that cannot be reached because they are 1. blocked, or 2. already processed.
 - Throughout it's time in the priority queue, a node may or may not be processed
 - If a node reaches the front of the priority queue, it is processed
-- Processing a node means adding all of its neighbors to the priority queue with their own respective F- and G-scores
+- Processing a node means adding all of its neighboring nodes to the priority queue with their own respective F- and G-scores
+- If the neighbor is blocked or in the closed set, it will not be added
 
 Here are some visual examples. Let's work with a 3x3 excerpt from a matrix of arbitrary size. Each square (white/green, labeled 1-9) represents a node.
 
