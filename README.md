@@ -27,6 +27,7 @@ By combining aspects from Dijkstra's algorithm and greedy algorithms, A\* always
 
 **[IMPORTANT — HOW A\* WORKS:](https://ih1.redbubble.net/image.3842072201.6397/raf,360x360,075,t,fafafa:ca443f4786.jpg)** Some things of note are that A\* uses something called an **F-score**, which is the total estimated cost. the F-score is derived from the **G-score** (the cost from the starting node) and the **H-score** (the heuristic estimated cost to reach the end node). A\* uses these scores to determine which nodes to check next, as well as which nodes to add to the optimal path. Essentially, for all nodes:
 - **F(n) = G(n) + H(n)**, where n is a node.
+
 **A\* also uses open/closed sets**. The open set represents all the current nodes within reach that haven't been explored yet (this is the priority queue). The closed set represents all the nodes that cannot be reached because they are 1. blocked, or 2. already processed.
 - Throughout it's time in the priority queue, a node may or may not be processed
 - If a node reaches the front of the priority queue, it is processed
