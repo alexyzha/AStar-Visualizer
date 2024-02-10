@@ -12,7 +12,7 @@ This demo uses a 2-dimensional graph (matrix). The backend is coded in C++, whic
 
 ## A\* Algorithm Background:
 
-You should probably know:
+**You should probably know:**
 1. [Dijkstra's Algorithm](https://www.youtube.com/watch?v=_lHSawdgXpI)
 2. [Some graph theory](https://en.wikipedia.org/wiki/Graph_theory)
 3. [Greedy algorithms](https://www.geeksforgeeks.org/greedy-algorithms/)
