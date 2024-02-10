@@ -112,7 +112,7 @@ int main() {
             int tempx = n.first, tempy = n.second;
             double N_G = C_G + FixDist(topx,topy,tempx,tempy);
             double N_COST = N_G + H_MAP[tempy][tempx];
-            if (N_G < BEST_G[tempy][tempx]) {
+            if(N_G < BEST_G[tempy][tempx]) {
                 BEST_G[tempy][tempx] = N_G;
                 OPEN.push(Node(N_COST,tempx,tempy,N_G));
                 RELATION[tempy][tempx] = {topx,topy};
