@@ -6,7 +6,7 @@ This demo uses a 2-dimensional graph (matrix). The backend is coded in C++, whic
 
 This README page contains:
 1. A\* algorithm background
-2. [Code documentation](#code documentation)
+2. [Code documentation](#code-documentation)
 3. A list of my struggles with WASM and how I overcame those 😭
 4. Credits to open source visual assets
 
