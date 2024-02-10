@@ -308,7 +308,7 @@ vector<int> ReturnPath(vector<vector<pair<int,int>>>& RELATION, int tx, int ty, 
 
 ## Credits:
 
-This is the [font](https://sourcefoundry.org/hack/) I used on the webpage. I love it :)
+[Here](https://sourcefoundry.org/hack/) is the font I used on the webpage. I love it and I use it as my VSCode font too. Thank you to whoever made this font [:)](https://i.pinimg.com/736x/8b/2d/66/8b2d661b34473f48b167d3b476dd2199.jpg)
 
 [Here](https://uiverse.io) is where I got the code bases for the buttons on the webpage. I changed some of the colors and animations, but the general shape/reactions are all derived from other CSS UI elements.
 
