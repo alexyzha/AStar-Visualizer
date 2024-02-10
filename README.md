@@ -144,9 +144,21 @@ auto comp = [](const Node a, const Node b) {
 };
 ```
 
-Now, we can create the priority queue:
+Now, we can create the priority queue, our open set. If you have no idea what open/closed set means, [read: "IMPORTANT..."](#a-algorithm-background)
 ```cpp
+//line 100
 priority_queue<Node, vector<Node>, decltype(comp)> OPEN(comp);
+```
+
+Our closed set will need to record the open/closed status of every single node in the matrix. Therefore, to cut down on unnecessary complexity, we can just create a matrix of booleans of the same dimensions as the main map for our closed set. 0/false, means that the node is open or can be open, while a value of 1/true means that the node at that coordinate is either closed or blocked off. We initialize a matrix with all 0s, then, we iterate through the main map to find the blocked nodes. When we find one, we set its corresponding closed set status to true, effectively closing it:
+```cpp
+//lines 89-94
+vector<vector<bool>> CLOSED(TEST_MAP.size(), vector<bool>(TEST_MAP[0].size(),0));
+for(int i = 0; i < TEST_MAP.size(); i++) {
+    for(int j = 0; j < TEST_MAP[0].size(); j++) {
+        if(TEST_MAP[i][j] == 1) CLOSED[i][j] = 1;
+    }
+}
 ```
 
 We must start somewhere, so we will insert the starting node into the priority queue. 
