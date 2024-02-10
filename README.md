@@ -25,8 +25,23 @@ A\* differs from Dijkstra's algorithm because it uses [heuristics](https://en.wi
 
 By combining aspects from Dijkstra's algorithm and greedy algorithms, A\* always accurately finds the shortest path possible.
 
-**[IMPORTANT:](https://ih1.redbubble.net/image.3842072201.6397/raf,360x360,075,t,fafafa:ca443f4786.jpg)** Something of note are that A\* uses something called an **F-score**, which is the total estimated cost. the F-score is derived from the **G-score** (the cost from the starting node) and the **H-score** (the heuristic estimated cost to reach the end node). A\* uses these scores to determine which nodes to check next, as well as which nodes to add to the optimal path. Essentially, for all nodes:
+**[IMPORTANT — HOW A\* WORKS:](https://ih1.redbubble.net/image.3842072201.6397/raf,360x360,075,t,fafafa:ca443f4786.jpg)** Some things of note are that A\* uses something called an **F-score**, which is the total estimated cost. the F-score is derived from the **G-score** (the cost from the starting node) and the **H-score** (the heuristic estimated cost to reach the end node). A\* uses these scores to determine which nodes to check next, as well as which nodes to add to the optimal path. Essentially, for all nodes:
 - **F(n) = G(n) + H(n)**, where n is a node.
+**A\* also uses open/closed sets**. The open set represents all the current nodes within reach that haven't been explored yet (this is the priority queue). The closed set represents all the nodes that cannot be reached because they are 1. blocked, or 2. already processed.
+- Throughout it's time in the priority queue, a node may or may not be processed
+- If a node reaches the front of the priority queue, it is processed
+- Processing a node means adding all of its neighbors to the priority queue with their own respective F- and G-scores
+
+Here are some visual examples. Let's work with a 3x3 excerpt from a matrix of arbitrary size. Each square (white/green, labeled 1-9) represents a node.
+<img width="151" alt="Screenshot_2024-02-09_at_7 00 03_PM" src="https://github.com/alexyzha/AStar-Visualizer/assets/122637724/6aa4d88b-90e3-4372-85cb-9e0e19c4c419">
+
+The green node (5) will be our starting node. Nodes 1, 2, 3, 4, 6, 7, 8, and 9 are its neighbors, so they would all get put into a priority queue. The starting node has been processed! We must now close the starting node, because we don't want to backtrack to a node we've already processed.
+<img width="148" alt="Screenshot_2024-02-09_at_6 56 13_PM" src="https://github.com/alexyzha/AStar-Visualizer/assets/122637724/3dac5968-414c-40c5-9193-4eb4bf6fdd2f">
+
+Say for some reason nodes 2, 3, and 6 have the smallest F-scores. We'll process them, and then close them just like we did with the starting node. We'll now end up with a configuration that looks like this:
+<img width="151" alt="Screenshot_2024-02-09_at_6 57 28_PM" src="https://github.com/alexyzha/AStar-Visualizer/assets/122637724/092640de-3720-46fa-9f84-671428de21b5">
+
+We will stop processing nodes when we reach the end node.
 
 ## Code Documentation:
 
@@ -92,17 +107,44 @@ const vector<vector<int>> TEST_MAP{{0,0,0,0,1,0,0,0,0,0},
                                    {0,0,0,1,0,0,0,0,0,0}};
 ```
 2. The code in the main logic file ([main/AStar.cpp](https://github.com/alexyzha/AStar-Visualizer/blob/main/AStar.cpp)) is a little different from the one used as the backend to this GitHub pages website. This code prints to terminal to check the validity of the pathing. However, the actual pathing logic is the same.
-3. My variable naming scheme is 💩
+3. The "//lines [num]-[num]" in each code block marks where it is in the file: [main/AStar.cpp](https://github.com/alexyzha/AStar-Visualizer/blob/main/AStar.cpp).
+4. My variable naming scheme is 💩
 
 With all that out of the way, we can finally move on to the actual algorithm part of A\*. 
 
 **The Algorithm Part: 😳**
 
-We'll create a "Node" struct because every node contains more information than can be stored in a matrix of doubles. Although we have the H-scores ([Read: "IMPORTANT:..."](#a-algorithm-background)) for all the nodes 
+We'll create a "Node" struct because every node contains more information than can be stored in a matrix of doubles. Although we have the H-scores ([Read: "IMPORTANT..."](#a-algorithm-background)) for all the nodes, we still somehow need to store all these values:
+1. F-score
+2. G-score (nodes further along the path derive their G-scores from previous nodes)
+3. Coordinates of the node (what tile they represent in the matrix. Because we are putting nodes in a priority queue, we need a quick and easy access to each Node's coordinates)
 
+With all these needs in mind, we can create this Node struct, where doubles F and G represent F- and G-scores respectively, while integers X and Y represent the coordinates of the node. The constructor will never be needed for anything other than declaring a node with all of these variables filled in, so it requires a 4-variable input:
+```cpp
+//lines 11-17
+struct Node {
+    double F;
+    double G;
+    int X;
+    int Y;
+    Node(double f, int x, int y, double g) : F(f), X(x), Y(y), G(g) {}
+};
+```
 
+Now that the Node struct is defined, we can create a priority queue, as this will help us determine which nodes to check first. We can't just plug a Node struct into the [STL](https://www.geeksforgeeks.org/the-c-standard-template-library-stl/) standard priority queue, so we have to write a custom comparator function. The comparator function will order each node from lowest to highest in terms of F-score. Here it is:
+```cpp
+//line 99, expanded for aesthetics
+auto comp = [](const Node a, const Node b) {
+    return a.F > b.F;
+};
+```
 
+Now, we can create the priority queue:
+```cpp
+priority_queue<Node, vector<Node>, decltype(comp)> OPEN(comp);
+```
 
+We must start somewhere, so we will insert the starting node into the priority queue. 
 
 
 
