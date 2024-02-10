@@ -48,6 +48,12 @@ Moving on, say for some reason nodes 2, 3, and 6 have the smallest F-scores. Thi
 
 We will stop processing nodes when we reach the end node.
 
+Finally, A\* also generally has a **best G-value map**. The logic is explained below:
+1. Different paths to a node can lead to different G-values
+2. We want to find the most optimal path, so ideally we want the lowest G-value for a node, since we can't change its H-value
+3. Therefore, if we somehow for some reason end up on a node twice, we need to be able to choose the path that leads to the node which has the lowest F-value
+4. F(n) = G(n) + H(n). However, we cannot change H(n). Therefore, we need to keep track of the lowest G-value the node has ever had
+
 ## Code Documentation:
 
 I will not show the frontend part of this demo, as the algorithm itself matters more. (Also because the frontend doesn't do any computations 💀💀💀)
@@ -90,6 +96,9 @@ vector<vector<double>> HeuristicMap(int col, int row, int END_X, int END_Y) {
 double EuclideanDist(int x1, int y1, int x2, int y2) {
     return sqrt(pow((x2-x1),2) + pow((y2-y1),2));
 }
+
+//line 88, creating the heuristic map
+const vector<vector<double>> H_MAP = HMap(TEST_MAP[0].size(),TEST_MAP.size(),END_X,END_Y);
 ```
 
 The HeuristicMap function (HMap in the actual code), given the dimensions of a matrix and the coordinates for the end node, will generate a heuristic map ([matrix](https://upload.wikimedia.org/wikipedia/en/c/c1/The_Matrix_Poster.jpg)) where every node in the matrix has a value that is the Euclidean distance between that node and the end node.
@@ -161,7 +170,112 @@ for(int i = 0; i < TEST_MAP.size(); i++) {
 }
 ```
 
-We must start somewhere, so we will insert the starting node into the priority queue. 
+Now that the open and closed sets are set up, we can start actually inserting nodes into them. We must start somewhere, so we will insert the starting node into the priority queue. We also need to close the starting node, as we don't want it to be processed again after this.
+```cpp
+//lines 101-102, variable names have been changed for readability
+OPEN.push(Node(H_MAP[START_Y][START_X]+0.0,START_X,START_Y,0.0));
+CLOSED[START_Y][START_X] = 1;
+```
+
+One more thing before we can start calculating the optimal path, [the best G-value map](https://www.youtube.com/watch?v=ifaoKZfQpdA). Like the closed set, the best G-value map will also be a matrix the same size of the main map, for simplicity's sake. It will be initialized as a vector<vector<double>> with a default value of numeric_limits<double>::infinity(). This map is here to ensure that we will always keep the lowest possible G-value at every given node. Without it, it's pretty much impossible to still get the optimal path. Believe me, I've tried...
+
+With everything else out of the way, we can **FINALLY** move on to the algorithm part of A\*, which somehow fits into only 17 lines of code (excluding all the auxillary functions 😭). The code in full is shown below, but later on, it's broken down into chunks and explained in more detail:
+```cpp
+//lines 105-122, main loop, variables renamed for clarity
+while(OPEN.size()) {
+    if(OPEN.top().X == END_X && OPEN.top().Y == END_Y) break;
+    int topx = OPEN.top().X, topy = OPEN.top().Y;
+    int CURRENT_G = OPEN.top().G;
+    OPEN.pop();
+    vector<pair<int,int>> neighbors = NEIGHBOR_FUNCTION(TEST_MAP,CLOSED,topx,topy);
+    for(auto& n : neighbors) {
+        int tempx = n.first, tempy = n.second;
+        double NEW_G = CURRENT_G + FixedDist(topx,topy,tempx,tempy);
+        double NEW_COST = NEW_G + H_MAP[tempy][tempx];
+        if (NEW_G < BEST_G[tempy][tempx]) {
+            BEST_G[tempy][tempx] = NEW_G;
+            OPEN.push(Node(NEW_COST,tempx,tempy,NEW_G));
+            RELATION[tempy][tempx] = {topx,topy};
+        }
+    }
+    CLOSED[topy][topx] = 1;
+}
+
+/************************** AUXILLARY FUNCTIONS BELOW :) **************************/
+
+//line 9, 8 directions specified for allowed movements/neighbors
+const vector<pair<int,int>> DIRECTIONS{{0,-1},{0,1},{-1,0},{1,0},{-1,-1},{1,-1},{-1,1},{1,1}};
+
+//lines 37-45, neighbor function (N_FXN) that returns a vector of pairs for all of a given node's valid neighbors
+vector<pair<int,int>> NEIGHBOR_FUNCTION(const vector<vector<int>>& map, const vector<vector<bool>>& CLOSED, int x, int y) {
+    vector<pair<int,int>> VALID_NEIGHBORS;
+    for (auto& d : DIRECTIONS) {
+        int NEW_X = x + d.first;
+        int NEW_Y = y + d.second;
+        if(NEW_X >= 0 && NEW_X < map[0].size() && NEW_Y >= 0 && NEW_Y < map.size() && !CLOSED[NEW_Y][NEW_X]) r.push_back({NEW_X, NEW_Y});
+    }
+    return VALID_NEIGHBORS;
+}
+
+//lines 23-25, fixed distance function which returns a simplified calculation for distance between 2 nodes
+//this is used as an optimization over the euclidean distance function, as increments in G-value will only
+//ever be 1 or sqrt(2), for cardinal and diagonal movements respectively
+double FixedDist(int x1, int y1, int x2, int y2) {
+    return abs(x1-x2) + abs(y1-y2) == 1.0 ? 1.0 : sqrt(2);
+}
+```
+
+**Note:** The auxillary functions in the code above, NEIGHBOR_FUNCTION(...) (N_FXN in the actual code) and FixedDist(...) (FixDist in the actual code) help us determine which neighbors of the current node we can insert into the open set.
+
+Basically, the main loop of A\*:
+1. Checks if the current node is the end node. If it isn't, it is popped from the open set
+```cpp
+while(OPEN.size()) {
+    if(OPEN.top().X == END_X && OPEN.top().Y == END_Y) break;
+    int topx = OPEN.top().X, topy = OPEN.top().Y;                //making node variables accessible before pop
+    int CURRENT_G = OPEN.top().G;                                //making node variables accessible before pop
+    OPEN.pop();
+    ...
+```
+2. Gets and inserts all the valid neighbors of the current node into the open set. If the new G-value for the neighbor node is better than the previous best G-value, override it, and then set that neighbor node's relation to the current node
+```cpp
+    vector<pair<int,int>> neighbors = NEIGHBOR_FUNCTION(TEST_MAP,CLOSED,topx,topy);
+    for(auto& n : neighbors) {
+        int tempx = n.first, tempy = n.second;                               //variable accessibility
+        double NEW_G = CURRENT_G + FixedDist(topx,topy,tempx,tempy);         //variable accessibility
+        double NEW_COST = NEW_G + H_MAP[tempy][tempx];                       //variable accessibility
+        if(NEW_G < BEST_G[tempy][tempx]) {                                   //use best G-value map
+            BEST_G[tempy][tempx] = NEW_G;
+            OPEN.push(Node(NEW_COST,tempx,tempy,NEW_G));
+            RELATION[tempy][tempx] = {topx,topy};
+        }
+    }
+```
+3. Put the current node in the closed set
+```cpp
+    ...
+    CLOSED[topy][topx] = 1;
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
