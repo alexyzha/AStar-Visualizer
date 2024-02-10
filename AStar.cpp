@@ -62,6 +62,12 @@ void Visualize(vector<vector<pair<int,int>>>& RELATION, int tx, int ty, const ve
 }
 
 int main() {
+    vector<int> B_COORD{7, 2, 8, 2, 5, 3, 6, 3, 7, 3, 8, 3, 4, 4, 5, 4, 6, 4, 5, 5, 3, 6, 4, 6, 5, 6, 1, 7, 2, 7, 3, 7, 4, 7, 5, 7, 0, 8, 1, 8, 2, 8, 3, 8, 0, 9, 1, 9};
+    vector<vector<int>> TEST_MAP(10,vector<int>(10,0));
+    for(int x=0,y=1; y < B_COORD.size(); x+=2,y+=2) {
+        TEST_MAP[B_COORD[y]][B_COORD[x]] = 1;
+    }
+    /*
     const vector<vector<int>> TEST_MAP{{0,0,0,0,1,0,0,0,0,0},
                                        {0,0,0,0,0,1,0,0,0,0},
                                        {0,0,0,0,0,1,0,0,0,0},
@@ -72,6 +78,7 @@ int main() {
                                        {0,0,0,0,1,0,0,0,1,0},
                                        {0,0,0,1,1,1,0,0,1,0},
                                        {0,0,0,1,0,0,0,0,0,0}};
+    */
 
     int sx, sy;
     cin >> sx >> sy;

@@ -4,6 +4,9 @@
 #include <queue>
 #include <emscripten/bind.h>
 using namespace std;
+using std::vector;
+using emscripten::val;
+using emscripten::allow_raw_pointers;
 
 // to compile and run B/C lambda function: g++ -std=c++11 AStar.cpp -o AStar && ./AStar
 // emcc AStar-Client.cpp -o JStar.js --bind -s MODULARIZE=1 -s EXPORT_NAME='createModule' -O2 -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_FUNCTIONS="['_free', '_malloc']" -lembind
@@ -24,12 +27,10 @@ double EuDist(int x1, int y1, int x2, int y2) {
     return sqrt(pow((x2-x1),2) + pow((y2-y1),2));
 }
 
-EMSCRIPTEN_KEEPALIVE
 double FixDist(int x1, int y1, int x2, int y2) {
     return abs(x1-x2) + abs(y1-y2) == 1.0 ? 1.0 : sqrt(2);
 }
 
-EMSCRIPTEN_KEEPALIVE
 vector<vector<double>> HMap(int col, int row, int tx, int ty) {
     vector<vector<double>> r(row,vector<double>(col,0.0));
     for(int i = 0; i < row; i++) {
@@ -40,7 +41,6 @@ vector<vector<double>> HMap(int col, int row, int tx, int ty) {
     return r;
 }
 
-EMSCRIPTEN_KEEPALIVE
 vector<pair<int,int>> N_FXN(const vector<vector<int>>& map, const vector<vector<bool>>& CLOSED, int x, int y) {
     vector<pair<int,int>> r;
     for (auto& d : DIRECTIONS) {
@@ -51,26 +51,22 @@ vector<pair<int,int>> N_FXN(const vector<vector<int>>& map, const vector<vector<
     return r;
 }
 
-EMSCRIPTEN_KEEPALIVE
 vector<int> ReturnPath(vector<vector<pair<int,int>>>& RELATION, int tx, int ty, const vector<vector<int>>& map) {
     vector<int> r;
     pair<int,int> C_PAIR = pair<int,int>(tx,ty);
     pair<int,int> I_PAIR = pair<int,int>(-1,-1);
-    r.push_back(C_PAIR.first);
-    r.push_back(C_PAIR.second);
     while(C_PAIR != I_PAIR) {
-        C_PAIR = RELATION[C_PAIR.second][C_PAIR.first];
         r.push_back(C_PAIR.first);
         r.push_back(C_PAIR.second);
+        C_PAIR = RELATION[C_PAIR.second][C_PAIR.first];
     }
     return r;
 }
 
-EMSCRIPTEN_KEEPALIVE
 vector<int> AStar(int COL, int ROW, int sx, int sy, int tx, int ty, vector<int> B_COORD) {
     vector<vector<int>> M_MAP(ROW,vector<int>(COL,0));
     for(int x=0,y=1; y < B_COORD.size(); x+=2,y+=2) {
-        M_MAP[B_COORD[x]][B_COORD[y]] = 1;
+        M_MAP[B_COORD[y]][B_COORD[x]] = 1;
     }
 
     const vector<vector<double>> H_MAP = HMap(M_MAP[0].size(),M_MAP.size(),tx,ty);
