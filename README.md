@@ -124,7 +124,7 @@ We'll create a "Node" struct because every node contains more information than c
 2. G-score (nodes further along the path derive their G-scores from previous nodes)
 3. Coordinates of the node (what tile they represent in the matrix. Because we are putting nodes in a priority queue, we need a quick and easy access to each Node's coordinates)
 
-With all these needs in mind, we can create this Node struct, where doubles F and G represent F- and G-scores respectively, while integers X and Y represent the coordinates of the node. The constructor will never be needed for anything other than declaring a node with all of these variables filled in, so it requires a 4-variable input:
+With all these needs in mind, we can create this Node struct where doubles F and G represent F- and G-scores respectively, while integers X and Y represent the coordinates of the node. The constructor will never be needed for anything other than declaring a node with all of these variables filled in, so it requires a 4-variable input:
 ```cpp
 //lines 11-17
 struct Node {
